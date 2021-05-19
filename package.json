@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "fastify": "^3.7.0",
+    "fastify-plugin": "^3.0.0",
     "fastify-static": "^3.3.0",
     "handlebars": "^4.7.6",
     "pino-pretty": "^4.3.0",

@@ -1,5 +1,7 @@
 'use strict'
 
+
+
 const path = require('path')
 const fastify = require('fastify')({
   logger: {
@@ -7,6 +9,12 @@ const fastify = require('fastify')({
   }
 })
 const port = process.env.PORT || 3000
+const { courseSchema } = require('./schemas')
+const auth = require('./plugins/auth')
+
+fastify.register(auth, {
+  username: 'admin'
+})
 
 fastify.register(require('point-of-view'), {
   engine: {
@@ -19,13 +27,15 @@ fastify.register(require('fastify-static'), {
   prefix: '/public/'
 })
 
-// Challenge: NO SCHEMA????
-// Please add a schema to validate the following properties from query string:
-//  - name
-//  - course (required)
-fastify.get('/', (request, reply) => {
+
+fastify.get('/', { schema: courseSchema }, (request, reply) => {
   const name = request.query.name || 'Anonymous'
   const course = request.query.course
+
+  const validateUserPass = fastify.validateUserPass('steven', '123')
+  console.log(':::::::::::::::::::::::::::::::::::::::::')
+  fastify.log.info(validateUserPass)
+
   reply.view('/templates/index.hbs', { name, course })
 })
 
